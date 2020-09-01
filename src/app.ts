@@ -1,5 +1,6 @@
 import * as dotenv from 'dotenv'
 import { AppConfig, Application } from './middlewares/middlewares'
+import { MongoDBController, MongoDBConfig } from './controllers/mongodb'
 
 const main = () => {
   dotenv.config()
@@ -11,13 +12,14 @@ const main = () => {
     hostPort: process.env.APP_HOST_PORT || '8000',
   }
 
-  const legacyMongodb = {
+  const legacyMongodb: MongoDBConfig = {
     host: process.env.LEGACY_MONGODB_HOST,
     database: process.env.LEGACY_MONGODB_DATABASE,
     collection: process.env.LEGACY_MONGODB_COLLECTION,
   }
 
   let app = new Application(appConfig)
+  app.addHandler(new MongoDBController(legacyMongodb))
   app.start()
 }
 main()
